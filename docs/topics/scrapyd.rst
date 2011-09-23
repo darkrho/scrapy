@@ -313,6 +313,12 @@ revision, for example ``r382``::
 
     scrapy deploy scrapyd -p project1 --version HG
 
+Also, if you use Git for tracking your project source code, you can use
+``GIT`` for the version which will be replaced by the SHA1 of current Git
+revision, for example ``b0582849179d1de7bd86eaa7201ea3cda4b5651f``::
+
+    scrapy deploy scrapyd -p project1 --version GIT
+
 Support for other version discovery sources may be added in the future.
 
 Finally, if you don't want to specify the target, project and version every
@@ -386,7 +392,7 @@ Scheduling a spider run
 To schedule a spider run::
 
     $ curl http://localhost:6800/schedule.json -d project=myproject -d spider=spider2
-    {"status": "ok"}
+    {"status": "ok", "jobid": "26d1b1a6d6f111e0be5c001e648c57f8"}
 
 For more resources see: :ref:`topics-scrapyd-jsonapi` for more available resources.
 
@@ -436,6 +442,7 @@ Schedule a spider run.
 * Parameters:
   * ``project`` (string, required) - the project name
   * ``spider`` (string, required) - the spider name
+  * ``setting`` (string, optional) - a scrapy setting to use when running the spider
   * any other parameter is passed as spider argument
 
 Example request::
@@ -445,6 +452,12 @@ Example request::
 Example response::
 
     {"status": "ok"}
+
+Example request passing a spider argument (``arg1``) and a setting
+(:setting:`DOWNLOAD_DELAY`)::
+
+    $ curl http://localhost:6800/schedule.json -d project=myproject -d spider=somespider -d setting=DOWNLOAD_DELAY=2 -d arg1=val1
+
 
 listprojects.json
 -----------------

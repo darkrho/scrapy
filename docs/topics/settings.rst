@@ -56,13 +56,13 @@ Example::
    >>> settings.overrides['LOG_ENABLED'] = True
 
 You can also override one (or more) settings from command line using the
-``--set`` command line argument. 
+``-s`` (or ``--set``) command line option. 
 
 .. highlight:: sh
 
 Example::
 
-    scrapy crawl domain.com --set LOG_FILE=scrapy.log
+    scrapy crawl domain.com -s LOG_FILE=scrapy.log
 
 2. Project settings module
 --------------------------
@@ -276,15 +276,6 @@ performed to any single IP. If non-zero, the
 used instead. In other words, concurrency limits will be applied per IP, not
 per domain.
 
-.. setting:: CONCURRENT_SPIDERS
-
-CONCURRENT_SPIDERS
-------------------
-
-Default: ``8``
-
-Maximum number of spiders to scrape in parallel.
-
 .. setting:: DEFAULT_ITEM_CLASS
 
 DEFAULT_ITEM_CLASS
@@ -336,16 +327,11 @@ will be imposed.
 DEPTH_PRIORITY
 --------------
 
-Default: ``1``
+Default: ``0``
 
 An integer that is used to adjust the request priority based on its depth.
 
-To crawl in `breadth-first order`_, set :setting:`DEPTH_PRIORITY` to ``1``.
-
-To crawl in `depth-first order`_, set :setting:`DEPTH_PRIORITY` to ``-1``.
-
-To disable any priority adjustment based on depth, set
-:setting:`DEPTH_PRIORITY` to ``0``.
+If zero, no priority adjustment is made from depth.
 
 .. setting:: DEPTH_STATS
 
@@ -599,6 +585,7 @@ Default::
         'scrapy.contrib.feedexport.FeedExporter': 0,
         'scrapy.contrib.spidercontext.SpiderContext': 0,
         'scrapy.contrib.logstats.LogStats': 0,
+        'scrapy.contrib.spiderstate.SpiderState': 0,
     }
 
 The list of available extensions. Keep in mind that some of them need to

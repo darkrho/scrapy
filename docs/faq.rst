@@ -87,8 +87,14 @@ See :ref:`topics-request-response-ref-request-userlogin`.
 Does Scrapy crawl in breath-first or depth-first order?
 -------------------------------------------------------
 
-It crawls on breath-first order by default, but you can change it to
-depth-first order by setting the :setting:`DEPTH_PRIORITY` setting to ``-1``.
+By default, Scrapy uses a `LIFO`_ queue for storing pending requests, which
+basically means that it crawls in `DFO order`_. This order is more convenient
+in most cases. If you do want to crawl in true `BFO order`_, you can do it by
+setting the following settings::
+
+    DEPTH_PRIORITY = 1
+    SCHEDULER_DISK_QUEUE = 'scrapy.squeue.PickleFifoDiskQueue'
+    SCHEDULER_MEMORY_QUEUE = 'scrapy.squeue.FifoMemoryQueue'
 
 My Scrapy crawler has memory leaks. What can I do?
 --------------------------------------------------
@@ -194,15 +200,15 @@ Simplest way to dump all my scraped items into a JSON/CSV/XML file?
 
 To dump into a JSON file::
 
-    scrapy crawl myspider --set FEED_URI=items.json --set FEED_FORMAT=json
+    scrapy crawl myspider -s FEED_URI=items.json -s FEED_FORMAT=json
 
 To dump into a CSV file::
 
-    scrapy crawl myspider --set FEED_URI=items.csv --set FEED_FORMAT=csv
+    scrapy crawl myspider -s FEED_URI=items.csv -s FEED_FORMAT=csv
 
 To dump into a XML file::
 
-    scrapy crawl myspider --set FEED_URI=items.xml --set FEED_FORMAT=xml
+    scrapy crawl myspider -s FEED_URI=items.xml -s FEED_FORMAT=xml
 
 For more information see :ref:`topics-feed-exports`
 
@@ -272,3 +278,6 @@ If you are still unable to prevent your bot getting banned, consider contacting
 .. _Google cache: http://www.googleguide.com/cached_pages.html
 .. _Tor project: https://www.torproject.org/
 .. _commercial support: http://scrapy.org/support/
+.. _LIFO: http://en.wikipedia.org/wiki/LIFO
+.. _DFO order: http://en.wikipedia.org/wiki/Depth-first_search
+.. _BFO order: http://en.wikipedia.org/wiki/Breadth-first_search

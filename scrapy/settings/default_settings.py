@@ -31,8 +31,6 @@ CONCURRENT_REQUESTS = 16
 CONCURRENT_REQUESTS_PER_DOMAIN = 8
 CONCURRENT_REQUESTS_PER_IP = 0
 
-CONCURRENT_SPIDERS = 8
-
 COOKIES_ENABLED = True
 COOKIES_DEBUG = False
 
@@ -47,7 +45,7 @@ DEFAULT_RESPONSE_ENCODING = 'ascii'
 
 DEPTH_LIMIT = 0
 DEPTH_STATS = True
-DEPTH_PRIORITY = 1
+DEPTH_PRIORITY = 0
 
 DNSCACHE_ENABLED = True
 
@@ -143,8 +141,8 @@ EXTENSIONS_BASE = {
     'scrapy.contrib.memdebug.MemoryDebugger': 0,
     'scrapy.contrib.closespider.CloseSpider': 0,
     'scrapy.contrib.feedexport.FeedExporter': 0,
-    'scrapy.contrib.spidercontext.SpiderContext': 0,
     'scrapy.contrib.logstats.LogStats': 0,
+    'scrapy.contrib.spiderstate.SpiderState': 0,
 }
 
 FEED_URI = None
@@ -189,6 +187,8 @@ LOG_STDOUT = False
 LOG_LEVEL = 'DEBUG'
 LOG_FILE = None
 
+LOG_UNSERIALIZABLE_REQUESTS = False
+
 LOGSTATS_INTERVAL = 60.0
 
 MAIL_DEBUG = False
@@ -224,7 +224,8 @@ RETRY_PRIORITY_ADJUST = -1
 ROBOTSTXT_OBEY = False
 
 SCHEDULER = 'scrapy.core.scheduler.Scheduler'
-SCHEDULER_DISK_QUEUE = 'scrapy.squeue.MarshalDiskQueue'
+SCHEDULER_DISK_QUEUE = 'scrapy.squeue.PickleLifoDiskQueue'
+SCHEDULER_MEMORY_QUEUE = 'scrapy.squeue.LifoMemoryQueue'
 
 SELECTORS_BACKEND = None # possible values: libxml2, lxml
 
@@ -243,10 +244,6 @@ SPIDER_MIDDLEWARES_BASE = {
 }
 
 SPIDER_MODULES = []
-
-SPIDER_CONTEXT_ENABLED = True
-SPIDER_CONTEXT_STORAGE_CLASS = 'scrapy.contrib.spidercontext.SqliteSpiderContextStorage'
-
 
 SQLITE_DB = 'scrapy.db'
 
