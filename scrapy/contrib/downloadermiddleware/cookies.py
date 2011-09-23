@@ -1,11 +1,11 @@
 import os
-from collections import defaultdict
 from scrapy.xlib.pydispatch import dispatcher
 
 from scrapy import signals
 from scrapy.exceptions import NotConfigured
 from scrapy.http import Response
-from scrapy.http.cookies import CookieJar
+from scrapy.http.cookies import CookieJar, FileCookieJar
+from scrapy.utils.project import data_path
 from scrapy.conf import settings
 from scrapy import log
 
@@ -17,7 +17,12 @@ class CookiesMiddleware(object):
     def __init__(self):
         if not settings.getbool('COOKIES_ENABLED'):
             raise NotConfigured
-        self.jars = defaultdict(CookieJar)
+        self.persist = settings.getbool('COOKIES_PERSIST')
+        self.cookies_dir = data_path(settings['COOKIES_DIR'])
+        if not os.path.exists(self.cookies_dir):
+            os.makedirs(self.cookies_dir)
+        self.jars = {}
+        dispatcher.connect(self.spider_opened, signals.spider_opened)
         dispatcher.connect(self.spider_closed, signals.spider_closed)
 
     def process_request(self, request, spider):
@@ -45,8 +50,19 @@ class CookiesMiddleware(object):
 
         return response
 
+    def spider_opened(self, spider):
+        if self.persist:
+            filename = os.path.join(self.cookies_dir, "%s.txt" % spider.name)
+            self.jars[spider] = FileCookieJar(filename)
+            if os.path.exists(filename):
+                self.jars[spider].load()
+        else:
+            self.jars[spider] = CookieJar()
+
     def spider_closed(self, spider):
-        self.jars.pop(spider, None)
+        jar = self.jars.pop(spider)
+        if self.persist:
+            jar.save()
 
     def _debug_cookie(self, request, spider):
         if self.debug:

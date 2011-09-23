@@ -1,10 +1,9 @@
-from cookielib import CookieJar as _CookieJar, DefaultCookiePolicy
-
+import cookielib
 from scrapy.utils.httpobj import urlparse_cached
 
-class CookieJar(object):
-    def __init__(self, policy=None):
-        self.jar = _CookieJar(policy or DefaultCookiePolicy())
+class BaseCookieJar(object):
+
+    def _setup(self):
         self.jar._cookies_lock = _DummyLock()
 
     def extract_cookies(self, response, request):
@@ -45,6 +44,28 @@ class CookieJar(object):
 
     def set_cookie_if_ok(self, cookie, request):
         self.jar.set_cookie_if_ok(cookie, WrappedRequest(request))
+
+
+class CookieJar(BaseCookieJar):
+
+    def __init__(self):
+        self.jar = cookielib.CookieJar()
+        self._setup()
+
+
+class FileCookieJar(BaseCookieJar):
+
+    jar_class = cookielib.LWPCookieJar
+
+    def __init__(self, filename):
+        self.jar = self.jar_class(filename)
+        self._setup()
+
+    def load(self):
+        self.jar.load()
+
+    def save(self):
+        self.jar.save()
 
 
 class _DummyLock(object):
