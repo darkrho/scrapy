@@ -76,7 +76,7 @@ easy task).
 We begin by modeling the item that we will use to hold the sites data obtained
 from dmoz.org, as we want to capture the name, url and description of the
 sites, we define fields for each of these three attributes. To do that, we edit
-items.py, found in the dmoz directory. Our Item class looks like this::
+items.py, found in the ``tutorial`` directory. Our Item class looks like this::
 
     from scrapy.item import Item, Field
 
@@ -268,19 +268,19 @@ The shell also instantiates two selectors, one for HTML (in the ``hxs``
 variable) and one for XML (in the ``xxs`` variable) with this response. So let's
 try them::
 
-   In [1]: hxs.select('/html/head/title')
-   Out[1]: [<HtmlXPathSelector (title) xpath=/html/head/title>]
+   In [1]: hxs.select('//title')
+   Out[1]: [<HtmlXPathSelector (title) xpath=//title>]
 
-   In [2]: hxs.select('/html/head/title').extract()
+   In [2]: hxs.select('//title').extract()
    Out[2]: [u'<title>Open Directory - Computers: Programming: Languages: Python: Books</title>']
 
-   In [3]: hxs.select('/html/head/title/text()')
-   Out[3]: [<HtmlXPathSelector (text) xpath=/html/head/title/text()>]
+   In [3]: hxs.select('//title/text()')
+   Out[3]: [<HtmlXPathSelector (text) xpath=//title/text()>]
 
-   In [4]: hxs.select('/html/head/title/text()').extract()
+   In [4]: hxs.select('//title/text()').extract()
    Out[4]: [u'Open Directory - Computers: Programming: Languages: Python: Books']
 
-   In [5]: hxs.select('/html/head/title/text()').re('(\w+):')
+   In [5]: hxs.select('//title/text()').re('(\w+):')
    Out[5]: [u'Computers', u'Programming', u'Languages', u'Python']
 
 Extracting the data
