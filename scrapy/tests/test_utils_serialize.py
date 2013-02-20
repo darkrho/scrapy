@@ -136,8 +136,8 @@ class JsonEncoderTestCase(BaseTestCase):
         i = MyItem(name='foo')
         i['child'] = MyItem(name='bar')
 
-        result = self.encoder.encode(i)
-        expected = '{"name": "foo", "child": {"name": "bar"}}'
+        result = json.loads(self.encoder.encode(i))
+        expected = {"name": "foo", "child": {"name": "bar"}}
         self.assertEqual(result, expected)
 
 
