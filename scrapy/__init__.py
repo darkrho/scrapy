@@ -1,9 +1,9 @@
 """
 Scrapy - a screen scraping framework written in Python
 """
-
-version_info = (0, 17, 0)
-__version__ = "0.17.0"
+import pkgutil
+__version__ = pkgutil.get_data(__package__, 'VERSION').strip()
+version_info = tuple(__version__.split('.')[:3])
 
 import sys, os, warnings
 
@@ -17,15 +17,11 @@ warnings.filterwarnings('ignore', category=DeprecationWarning, module='twisted')
 # monkey patches to fix external library issues
 from scrapy.xlib import urlparse_monkeypatches
 
-# optional_features is a set containing Scrapy optional features
+# WARNING: optional_features set is deprecated and will be removed soon. Do not use.
 optional_features = set()
 
-try:
-    import OpenSSL
-except ImportError:
-    pass
-else:
-    optional_features.add('ssl')
+# TODO: backwards compatibility, remove for Scrapy 0.20
+optional_features.add('ssl')
 
 try:
     import boto
